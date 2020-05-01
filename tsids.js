@@ -12,7 +12,7 @@ var marquee = require('./components/marquee.js'); // Component: marquee
 
 // ------------------------------------------------
 
-var version = "1.1";
+var version = "1.5";
 
 // ------------------------------------------------
 
