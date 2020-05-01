@@ -1,0 +1,138 @@
+<html>
+    <style>
+        td {
+            margin: 0px;
+        }
+        .slip-reordering {
+            box-shadow: 0 2px 10px rgba(0,0,0,0.45);
+        }
+        li div{
+            margin-right: 10%
+        }
+    </style>
+
+    <head>
+        <script type="text/javascript" src="../jquery-3.3.1.min.js"></script>
+        <link type="text/css" rel="stylesheet" href="../materialize.min.css">
+        <script src="../materialize.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        <script src="slip.js"></script>
+        <script src="socketio.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <link rel="stylesheet" href="https:///code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    </head>
+
+    <body>
+        <table id="table" style="margin:0">
+            <thead><tr><th>Name</th><th>Date</th><th>Time</th><th>Duration</th></tr></thead>
+            <tbody></tbody>
+        </table>
+        <a class="waves-effect waves-light btn" onclick="tableJSON()">update</a>
+        <a class="waves-effect waves-light btn orange" onclick="addTableRow()">add row</a>
+        <ul id="list">
+        </ul>
+        <a class="waves-effect waves-light btn" onclick="listArray()">update</a>
+        <a class="waves-effect waves-light btn orange" onclick="addListRow()">add row</a>
+    </body>
+    <script>
+        var socket = io('http://localhost:3000');
+
+        // Add row
+        var addtableRowNumber = 0;
+        function addTableRow() {
+            if (addtableRowNumber > 0) {
+                alert("Please retry after update!")
+            } else {
+                $("#table tbody").html($("#table tbody").html() + `<tr>
+                                                                <td><div class='input-field col s3'><input value='' type='text' class='validate data' required></div></td>
+                                                                <td><input type='text' class='datepicker data' required></td>
+                                                                <td><input type="text" class="timepicker" required></td>
+                                                                <td><div class='input-field col s3'><input value='' type='number' class='validate data' required></div></td>
+                                                                </tr>
+                                                                <script>$('.datepicker').flatpickr({dateFormat: 'Y-m-d'});$('.timepicker').timepicker({twelveHour: false});<\/script>");`
+                )
+                addtableRowNumber = addtableRowNumber + 1;
+            }
+        }
+
+        // JSON -> Table
+        function JSONTable() {
+            socket.on('specialEvent', function (data) { // data = {name: "", date: "YYYY-MM-DD", time: "HH:mm", duration: number}
+
+                data.forEach(item => {
+                    console.log(item.time)
+                    $("#table tbody").html($("#table tbody").html() + `<tr>
+                                                                        <td><div class='input-field col s3'><input value='` + item.name + `' type='text' class='validate data' required></div></td>
+                                                                        <td><input type='text' class='datepicker` + item.date + ` data' required></td>
+                                                                        <td><input value="` + item.time + `" type="text" class="timepicker` + item.time.replace(":", "") + `" required></td>
+                                                                        <td><div class='input-field col s3'><input value='` + item.duration + `' type='number' class='validate data' required></div></td>
+                                                                        </tr>
+                                                                        <script>$('.datepicker` + item.date + `').flatpickr({dateFormat: 'Y-m-d', defaultDate: '` + item.date +`'});$('.timepicker` + item.time.replace(":", "") + `').timepicker({twelveHour: false, defaultTime: "` + item.time + `"});<\/script>");`
+                    )
+                });
+            });
+        }
+        JSONTable();
+
+        // Table -> JSON
+        function tableJSON() {
+            let items = [];
+            $('tbody tr').each(function() {
+                let values = [];
+                $(this).find("input").each(function() {
+                    values.push($(this).val());
+                })
+                let data = {name: values[0], date: values[1], time: values[2], duration: values[3]};
+                items.push(data);
+            })
+            socket.emit('specialEvent', items);
+            location.reload();
+        }
+
+        // List
+        $( function() {
+            $( "#list" ).sortable();
+            $( "#list" ).disableSelection();
+        } );
+
+        // Add row
+        var addListRowNumber = 0;
+        function addListRow() {
+            if (addListRowNumber > 0) {
+                alert("Please retry after update!")
+            } else {
+                $("#list").html($("#list").html() + "<li><div class='input-field'><input value='' type='text' class='listItem'></div></li>");
+                addListRowNumber = addListRowNumber + 1;
+            }
+        }
+
+        // Array -> List
+        function arrayList() {
+            socket.on('array', function (data) {
+                //let array = data.slice(",");
+                console.log(data);
+                data.forEach(item => {
+                    $("#list").html($("#list").html() + "<li><div class='input-field'><input value='" + item + "' type='text' class='listItem'></div></li>");
+                });
+            });
+        }
+        arrayList()
+ 
+        // List -> Array
+        function listArray() {
+            let array = [];
+            $('.listItem').each(function() {
+                if ($(this).val() == "") {
+                    // Nothing
+                } else {
+                    array.push($(this).val());
+                }
+            })
+            console.log(array);
+            socket.emit('array', array);
+            location.reload();
+        }
+
+    </script>
+</html>
