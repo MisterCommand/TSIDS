@@ -1,4 +1,4 @@
-var homework = require('./homework.js');
+var homework = require('../components/homework.js');
 var date = require('date-and-time');
 var last_update = "";
 

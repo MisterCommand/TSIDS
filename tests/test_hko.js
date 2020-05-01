@@ -1,4 +1,4 @@
-var hko = require('./hko.js');
+var hko = require('../components/hko.js');
 
 hko.temp()
     .then((data) => {

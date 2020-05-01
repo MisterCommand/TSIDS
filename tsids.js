@@ -5,10 +5,10 @@ require('dotenv').config()
 var date = require('date-and-time');
 var request = require('request');
 var schedule = require('node-schedule');
-var hko = require('./hko.js'); // Component: hko
-var homework = require('./homework.js'); // Component: homework
-var specialEvent = require('./specialEvent.js'); // Component: specialEvent
-var marquee = require('./marquee.js'); // Component: marquee
+var hko = require('./components/hko.js'); // Component: hko
+var homework = require('./components/homework.js'); // Component: homework
+var specialEvent = require('./components/specialEvent.js'); // Component: specialEvent
+var marquee = require('./components/marquee.js'); // Component: marquee
 
 // ------------------------------------------------
 

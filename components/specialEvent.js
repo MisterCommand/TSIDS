@@ -1,6 +1,6 @@
 var date = require('date-and-time');
 var fs = require('fs');
-var file = "Special_Events.txt";
+var file = "../Special_Events.txt";
 
 
 var get = function() {

@@ -1,4 +1,4 @@
-var marquee = require('./marquee.js');
+var marquee = require('../components/marquee.js');
 var date = require('date-and-time');
 
 function timestamp() {
