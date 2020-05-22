@@ -1,0 +1,80 @@
+// Time Cycle
+
+// Eclass Fetch
+var eclass_update_school = schedule.scheduleJob("*/40 9-16 * * 1-5", function(){
+  eclass();
+});
+var eclass_update_after_school = schedule.scheduleJob("0 17-23/6 * * 1-5", function(){
+  eclass();
+});
+var eclass_update_before_school = schedule.scheduleJob("0 0-8/6 * * 1-5", function(){
+  eclass();
+});
+var eclass_update_weekend = schedule.scheduleJob("0 0-23/12 * * 6-7", function(){
+  eclass();
+});
+
+// Apply to all
+var every_minute = schedule.scheduleJob("* * * * *", function(){
+  specialEventDetect()
+});
+function ct() {
+  io.sockets.emit('time', "before_school");
+};
+function class_80() {
+  io.sockets.emit('time', "class_80");
+  console.log("class 80")
+};
+function recess() {
+  io.sockets.emit('time', "recess");
+};
+function class_40() {
+  io.sockets.emit('time', "class_40");
+  console.log("class 40")
+};
+// CT
+var ct1 = schedule.scheduleJob("45 7 * * 1-5", function(){
+  ct();
+});
+var ct2 = schedule.scheduleJob("00 8 * * 1-5", function(){
+  ct();
+});
+var ct3 = schedule.scheduleJob("15 8 * * 1-5", function(){
+  ct();
+});
+
+// Recess
+var r1 = schedule.scheduleJob("55 9 * * 1-5", function(){
+  recess();
+});
+var r2 = schedule.scheduleJob("30 11 * * 1-5", function(){
+  recess();
+});
+var r3 = schedule.scheduleJob("5 13 * * 1-5", function(){
+  recess();
+});
+var r4 = schedule.scheduleJob("40 14 * * 1-5", function(){
+  recess(); 
+});
+
+// Classes
+var first_class = schedule.scheduleJob("35 8 * * 1-5", function(){
+  class_80();
+});
+var second_class = schedule.scheduleJob("10 10 * * 1-5", function(){
+  class_80();
+});
+var third_class = schedule.scheduleJob("45 11 * * 1-5", function(){
+  class_80();
+});
+var fourth_class = schedule.scheduleJob("0 14 * * 1-5", function(){
+  class_40();
+});
+var fifth_class = schedule.scheduleJob("50 14 * * 1-5", function(){
+  class_80();
+});
+
+// After school
+var r5 = schedule.scheduleJob("10 16 * * 1-5", function(){
+  recess();
+});

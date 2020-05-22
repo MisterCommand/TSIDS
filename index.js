@@ -355,27 +355,26 @@ var eclass_update_weekend = schedule.scheduleJob("0 0-23/12 * * 6-7", function()
 
 // Apply to all
 var every_minute = schedule.scheduleJob("* * * * *", function(){
-  specialEventDetect()
+  specialEventDetect();
 });
+
+// time: {type: "before_school"/"recess"/"class", nextClass/currentClass: "", duration: 80/40}
 function ct() {
-  io.sockets.emit('time', "before_school");
+  io.sockets.emit('time', {type: "before_school"});
 };
-function class_80() {
-  io.sockets.emit('time', "class_80");
-  console.log("class 80")
+function recess(nextClass) {
+  io.sockets.emit('time', {type: "recess", nextClass: nextClass});
 };
-function recess() {
-  io.sockets.emit('time', "recess");
+function startClass(currentClass, duration) {
+  io.sockets.emit('time', {type: "class", currentClass: currentClass, duration: duration});
+  console.log("class: " + currentClass + "(" + duration + ")");
 };
-function class_40() {
-  io.sockets.emit('time', "class_40");
-  console.log("class 40")
-};
+
 // CT
-var ct1 = schedule.scheduleJob("45 7 * * 1-5", function(){
+var ct1 = schedule.scheduleJob("00 8 * * 1-5", function(){
   ct();
 });
-var ct2 = schedule.scheduleJob("00 8 * * 1-5", function(){
+var ct2 = schedule.scheduleJob("10 8 * * 1-5", function(){
   ct();
 });
 var ct3 = schedule.scheduleJob("15 8 * * 1-5", function(){
@@ -383,37 +382,138 @@ var ct3 = schedule.scheduleJob("15 8 * * 1-5", function(){
 });
 
 // Recess
-var r1 = schedule.scheduleJob("55 9 * * 1-5", function(){
-  recess();
+var monday_r1 = schedule.scheduleJob("25 9 * * 1", function(){
+  recess("下一節課是：" +　"B1");
 });
-var r2 = schedule.scheduleJob("30 11 * * 1-5", function(){
-  recess();
+var monday_r2 = schedule.scheduleJob("35 10 * * 1", function(){
+  recess("下一節課是：" +　"通識");
 });
-var r3 = schedule.scheduleJob("5 13 * * 1-5", function(){
-  recess();
+var monday_r3 = schedule.scheduleJob("45 11 * * 1", function(){
+  recess("下一節課是：" +　"Math.");
 });
-var r4 = schedule.scheduleJob("40 14 * * 1-5", function(){
-  recess(); 
+var tuesday_r1 = schedule.scheduleJob("25 9 * * 2", function(){
+  recess("下一節課是：" +　"通識");
+});
+var tuesday_r2 = schedule.scheduleJob("35 10 * * 2", function(){
+  recess("下一節課是：" +　"B3");
+});
+var tuesday_r3 = schedule.scheduleJob("45 11 * * 2", function(){
+  recess("下一節課是：" +　"數學");
+});
+var wednesday_r1 = schedule.scheduleJob("25 9 * * 3", function(){
+  recess("下一節課是：" +　"B1");
+});
+var wednesday_r2 = schedule.scheduleJob("35 10 * * 3", function(){
+  recess("下一節課是：" +　"English");
+});
+var wednesday_r3 = schedule.scheduleJob("45 11 * * 3", function(){
+  recess("下一節課是：" +　"中文");
+});
+var thursday_r1 = schedule.scheduleJob("25 9 * * 4", function(){
+  recess("下一節課是：" +　"English");
+});
+var thursday_r2 = schedule.scheduleJob("35 10 * * 4", function(){
+  recess("下一節課是：" +　"數學");
+});
+var thursday_r3 = schedule.scheduleJob("45 11 * * 4", function(){
+  recess("下一節課是：" +　"B1");
+});
+var friday_r1 = schedule.scheduleJob("25 9 * * 5", function(){
+  recess("下一節課是：" +　"English");
+});
+var friday_r2 = schedule.scheduleJob("35 10 * * 5", function(){
+  recess("下一節課是：" +　"Math.");
+});
+var friday_r3 = schedule.scheduleJob("45 11 * * 5", function(){
+  recess("下一節課是：" +　"B3");
 });
 
-// Classes
-var first_class = schedule.scheduleJob("35 8 * * 1-5", function(){
-  class_80();
+// Monday Classes
+var monday_first_class = schedule.scheduleJob("25 8 * * 1", function(){
+  startClass("中文", 60)();
 });
-var second_class = schedule.scheduleJob("10 10 * * 1-5", function(){
-  class_80();
+var monday_second_class = schedule.scheduleJob("35 9 * * 1", function(){
+  startClass("B1", 60)();
 });
-var third_class = schedule.scheduleJob("45 11 * * 1-5", function(){
-  class_80();
+var monday_third_class = schedule.scheduleJob("45 10 * * 1", function(){
+  startClass("通識", 60)();
 });
-var fourth_class = schedule.scheduleJob("0 14 * * 1-5", function(){
-  class_40();
+var monday_fourth_class = schedule.scheduleJob("55 11 * * 1", function(){
+  startClass("Math.", 30)();
 });
-var fifth_class = schedule.scheduleJob("50 14 * * 1-5", function(){
-  class_80();
+var monday_fifth_class = schedule.scheduleJob("25 12 * * 1", function(){
+  startClass("PE", 30)();
+});
+
+// Tuesday Classes
+var tuesday_first_class = schedule.scheduleJob("25 8 * * 2", function(){
+  startClass("B2", 60)();
+});
+var tuesday_monday_second_class = schedule.scheduleJob("35 9 * * 2", function(){
+  startClass("通識", 60)();
+});
+var tuesday_monday_third_class = schedule.scheduleJob("45 10 * * 2", function(){
+  startClass("B3", 60)();
+});
+var tuesday_monday_fourth_class = schedule.scheduleJob("55 11 * * 2", function(){
+  startClass("Math.", 30)();
+});
+var tuesday_monday_fifth_class = schedule.scheduleJob("25 12 * * 2", function(){
+  startClass("English", 30)();
+});
+
+// Wednesday Classes
+var wednesday_first_class = schedule.scheduleJob("25 8 * * 3", function(){
+  startClass("B2", 60)();
+});
+var wednesday_monday_second_class = schedule.scheduleJob("35 9 * * 3", function(){
+  startClass("B1", 60)();
+});
+var wednesday_monday_third_class = schedule.scheduleJob("45 10 * * 3", function(){
+  startClass("English", 60)();
+});
+var wednesday_monday_fourth_class = schedule.scheduleJob("55 11 * * 3", function(){
+  startClass("中文", 30)();
+});
+var wednesday_monday_fifth_class = schedule.scheduleJob("25 12 * * 3", function(){
+  startClass("通識", 30)();
+});
+
+// Thursday Classes
+var thursday_first_class = schedule.scheduleJob("25 8 * * 4", function(){
+  startClass("B3", 60)();
+});
+var thursday_econd_class = schedule.scheduleJob("35 9 * * 4", function(){
+  startClass("English", 60)();
+});
+var thursday_third_class = schedule.scheduleJob("45 10 * * 4", function(){
+  startClass("Math.", 60)();
+});
+var thursday_fourth_class = schedule.scheduleJob("55 11 * * 4", function(){
+  startClass("B1", 30)();
+});
+var thursday_fifth_class = schedule.scheduleJob("25 12 * * 4", function(){
+  startClass("中文", 30)();
+});
+
+// Friday Classes
+var friday_first_class = schedule.scheduleJob("25 8 * * 5", function(){
+  startClass("中文", 60)();
+});
+var friday_second_class = schedule.scheduleJob("35 9 * * 5", function(){
+  startClass("English", 60)();
+});
+var friday_third_class = schedule.scheduleJob("45 10 * * 5", function(){
+  startClass("Math.", 60)();
+});
+var friday_fourth_class = schedule.scheduleJob("55 11 * * 5", function(){
+  startClass("B3", 30)();
+});
+var friday_fifth_class = schedule.scheduleJob("25 12 * * 5", function(){
+  startClass("B2", 30)();
 });
 
 // After school
-var r5 = schedule.scheduleJob("10 16 * * 1-5", function(){
-  recess();
+var r5 = schedule.scheduleJob("55 12 * * 1-5", function(){
+  recess("");
 });
