@@ -29,6 +29,8 @@ var version = "1.5";
 // array
 // time
 // specialEventBC
+// data: {type: "", data: ""}
+// event: {type: "", data: ""}
 
 // ------------------------------------------------
 
@@ -102,7 +104,7 @@ function fetchTemp() {
   hko.temp()
     .then((data) => {
         console.log("溫度已更新：" + data + " (" + timestamp() + ")");
-        io.sockets.emit('temperature', data + "°C");
+        io.sockets.emit('data', {type: "temperature", data: data + "°C"});
     })
     .catch((error) => {
       console.log("無法連接到香港天文台分區天氣API，部分功能可能受限。錯誤信息：" + error + " (" + timestamp() + ")");
@@ -126,7 +128,7 @@ function fetchSpecialWeatherReminder() {
 function fetchWarning() {
   hko.weatherWarning()
     .then((data) => {
-      io.sockets.emit('warning', data);
+      io.sockets.emit('data', {type: "warning", data: data});
       console.log("氣象警告已更新：" + data  + " (" + timestamp() + ")");
     })
     .catch((error) => {
@@ -156,7 +158,7 @@ function eclass() {
         console.log("數據庫已更新" + " (" + timestamp() + ")");
         last_update = new Date;
         last_update = date.format(last_update, 'HH:mm:ss');
-        io.sockets.emit("update", last_update);
+        io.sockets.emit("data", {type: "update", data: last_update});
         todayHW();
         futureHW();
     })
@@ -174,7 +176,7 @@ function todayHW() {
             title: results.map((value) => { return value.title }),
             submit: results.map((value) => { return value.submit })
         };
-        io.sockets.emit('todayHW', data);
+        io.sockets.emit('data', {type: "todayHW", data: data});
         console.log("已更新今日功課" + " (" + timestamp() + ")")
     })
     .catch((error) => {
@@ -192,7 +194,7 @@ function futureHW() {
             end: results.map((value) => { return date.format(value.end, 'YYYY-MM-DD') }),
             submit: results.map((value) => { return value.submit })
         };
-        io.sockets.emit('futureHW', data);
+        io.sockets.emit('data', {type: "futureHW", data: data});
         console.log("已更新未來功課" + " (" + timestamp() + ")")
     })
     .catch((error) => {
@@ -222,30 +224,45 @@ function CCWeather() {
 // ------------------------------------------------
 // CONTROL PANEL
 // Special event
+
+io.sockets.on('connection', function (socket) {
+  socket.on('data', function (data) {
+    switch (data.type) {
+      case "specialEvent": // SOCKETIO -> File
+          specialEvent.update(data.data) // data = [{name: "", date: "YYYY-MM-DD", time: "HH:mm", duration: number}]
+            .then(() => {
+                console.log("特殊事件時間表更新（接收）" + " (" + timestamp() + ")");
+            })
+            .catch((error) => {
+                console.log("特殊事件時間表更新（接收）錯誤 " + error + " (" + timestamp() + ")");
+            })
+        break
+      
+      case "array": // Array -> Marquee
+        marquee.update(data.data) // data = [string]
+          .then(() => {
+              marqueeUpdate();
+              console.log("信息滾動條更新（接收）" + " (" + timestamp() + ")");
+          })
+          .catch((error) => {
+              console.log("信息滾動條更新（接收）錯誤 " + error + " (" + timestamp() + ")");
+          })
+        break
+    }
+  });
+});
+
 // File -> SOCKETIO
 function fileJSON() {
   specialEvent.get()
     .then((data) => { // data = [{name: "", date: "YYYY-MM-DD", time: "HH:mm", duration: number}]
         console.log("特殊事件時間表更新（發送）" + " (" + timestamp() + ")");
-        io.sockets.emit('specialEvent', data);
+        io.sockets.emit('data', {type: "specialEvent", data: data});
     })
     .catch((error) => {
         console.log("特殊事件時間表更新（接收）錯誤: " + error + " (" + timestamp() + ")");
     })
 }
-
-// SOCKETIO -> File
-io.sockets.on('connection', function (socket) {
-  socket.on('specialEvent', function (data) {
-    specialEvent.update(data) // data = [{name: "", date: "YYYY-MM-DD", time: "HH:mm", duration: number}]
-    .then(() => {
-        console.log("特殊事件時間表更新（接收）" + " (" + timestamp() + ")");
-    })
-    .catch((error) => {
-        console.log("特殊事件時間表更新（接收）錯誤 " + error + " (" + timestamp() + ")");
-    })
-  });
-});
 
 // Search every minute
 function specialEventDetect() {
@@ -254,8 +271,10 @@ function specialEventDetect() {
       if (data.status == "none") {
           console.log("無特殊事件" + " (" + timestamp() + ")");
       } else if (data.status == "ended") {
+          io.sockets.emit('event', {type: "specialEvent", data: {status: "ended"}});
           console.log("特殊事件已結束: " + data.name + " (" + timestamp() + ")");
       } else {
+          io.sockets.emit('event', {type: "specialEvent", data: data});
           console.log("特殊事件: " + data.name + " (" + timestamp() + ")");
       }
   })
@@ -269,26 +288,13 @@ var marqueeItem = [];
 function marqueeArray() {
   marquee.get()
   .then((data) => { // data = [string]
-      io.sockets.emit('array', data);
+      io.sockets.emit('data', {type: "array", data: data});
       console.log("信息滾動條更新（發送）: " + data + " (" + timestamp() + ")");
   })
   .catch((error) => {
       console.log("信息滾動條更新（發送）錯誤: " + error + " (" + timestamp() + ")");
   })
 }
-
-// Array -> Marquee
-io.sockets.on('connection', function (socket) {
-  socket.on('array', function (data) {
-    marquee.update(data) // data = [string]
-    .then(() => {
-        console.log("信息滾動條更新（接收）" + " (" + timestamp() + ")");
-    })
-    .catch((error) => {
-        console.log("信息滾動條更新（接收）錯誤 " + error + " (" + timestamp() + ")");
-    }) 
-  });
-});
 
 // Structure marquee
 function marqueeUpdate() {
@@ -310,7 +316,7 @@ function marqueeUpdate() {
           }
         })
         setTimeout(function () {
-          io.sockets.emit('marquee', data.join("          "));
+          io.sockets.emit('data', {type: "marquee", data: data.join("          ")});
           console.log("信息滾動條已更新：" + data.join("          ")  + " (" + timestamp() + ")");
         }, 8000);
     })
@@ -360,14 +366,14 @@ var every_minute = schedule.scheduleJob("* * * * *", function(){
 
 // time: {type: "before_school"/"recess"/"class", nextClass/currentClass: "", duration: 80/40}
 function ct() {
-  io.sockets.emit('time', {type: "before_school"});
+  io.sockets.emit('event', {type: "before_school"});
 };
 function recess(nextClass) {
-  io.sockets.emit('time', {type: "recess", nextClass: nextClass});
+  io.sockets.emit('event', {type: "recess", data: {nextClass: nextClass}});
 };
 function startClass(currentClass, duration) {
-  io.sockets.emit('time', {type: "class", currentClass: currentClass, duration: duration});
-  console.log("class: " + currentClass + "(" + duration + ")");
+  io.sockets.emit('event', {type: "class", data: {currentClass: currentClass, duration: duration}});
+  console.log("class: " + currentClass + "(" + duration + ")" + " (" + timestamp() + ")");
 };
 
 // CT

@@ -29,9 +29,9 @@ var detect = function(now) { // now = date object
                    
                     if (item.date == d && item.time == t) { // Event starting now
                         result = item
-                    } else if (date.subtract(now, new Date (item.date + " " + item.time)).toMinutes() <= item.duration) { // Event happening
+                    } else if (date.subtract(now, new Date (item.date + " " + item.time)).toMinutes() < item.duration) { // Event happening
                         result = item
-                    } else if (date.subtract(now, new Date (item.date + " " + item.time)).toMinutes() == item.duration + 1) { // Event ended
+                    } else if (date.subtract(now, new Date (item.date + " " + item.time)).toMinutes() == item.duration) { // Event ended
                         result = {status: "ended", name: item.name}
                     } else { // No event
                         result = {status: "none"}
