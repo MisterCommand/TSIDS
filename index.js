@@ -373,7 +373,7 @@ function recess(nextClass) {
 };
 function startClass(currentClass, duration) {
   io.sockets.emit('event', {type: "class", data: {currentClass: currentClass, duration: duration}});
-  console.log("class: " + currentClass + "(" + duration + ")" + " (" + timestamp() + ")");
+  console.log("課程: " + currentClass + "(" + duration + ")" + " (" + timestamp() + ")");
 };
 
 // CT
@@ -435,88 +435,88 @@ var friday_r3 = schedule.scheduleJob("45 11 * * 5", function(){
 });
 
 // Monday Classes
-var monday_first_class = schedule.scheduleJob("25 8 * * 1", function(){
-  startClass("中文", 60)();
+var monday_first_class = schedule.scheduleJob("43 22 * * 1", function(){
+  startClass("中文", 60);
 });
 var monday_second_class = schedule.scheduleJob("35 9 * * 1", function(){
-  startClass("B1", 60)();
+  startClass("B1", 60);
 });
 var monday_third_class = schedule.scheduleJob("45 10 * * 1", function(){
-  startClass("通識", 60)();
+  startClass("通識", 60);
 });
 var monday_fourth_class = schedule.scheduleJob("55 11 * * 1", function(){
-  startClass("Math.", 30)();
+  startClass("Math.", 30);
 });
 var monday_fifth_class = schedule.scheduleJob("25 12 * * 1", function(){
-  startClass("PE", 30)();
+  startClass("PE", 30);
 });
 
 // Tuesday Classes
 var tuesday_first_class = schedule.scheduleJob("25 8 * * 2", function(){
-  startClass("B2", 60)();
+  startClass("B2", 60);
 });
 var tuesday_monday_second_class = schedule.scheduleJob("35 9 * * 2", function(){
-  startClass("通識", 60)();
+  startClass("通識", 60);
 });
 var tuesday_monday_third_class = schedule.scheduleJob("45 10 * * 2", function(){
-  startClass("B3", 60)();
+  startClass("B3", 60);
 });
 var tuesday_monday_fourth_class = schedule.scheduleJob("55 11 * * 2", function(){
-  startClass("Math.", 30)();
+  startClass("Math.", 30);
 });
 var tuesday_monday_fifth_class = schedule.scheduleJob("25 12 * * 2", function(){
-  startClass("English", 30)();
+  startClass("English", 30);
 });
 
 // Wednesday Classes
 var wednesday_first_class = schedule.scheduleJob("25 8 * * 3", function(){
-  startClass("B2", 60)();
+  startClass("B2", 60);
 });
 var wednesday_monday_second_class = schedule.scheduleJob("35 9 * * 3", function(){
-  startClass("B1", 60)();
+  startClass("B1", 60);
 });
 var wednesday_monday_third_class = schedule.scheduleJob("45 10 * * 3", function(){
-  startClass("English", 60)();
+  startClass("English", 60);
 });
 var wednesday_monday_fourth_class = schedule.scheduleJob("55 11 * * 3", function(){
-  startClass("中文", 30)();
+  startClass("中文", 30);
 });
 var wednesday_monday_fifth_class = schedule.scheduleJob("25 12 * * 3", function(){
-  startClass("通識", 30)();
+  startClass("通識", 30);
 });
 
 // Thursday Classes
 var thursday_first_class = schedule.scheduleJob("25 8 * * 4", function(){
-  startClass("B3", 60)();
+  startClass("B3", 60);
 });
 var thursday_econd_class = schedule.scheduleJob("35 9 * * 4", function(){
-  startClass("English", 60)();
+  startClass("English", 60);
 });
 var thursday_third_class = schedule.scheduleJob("45 10 * * 4", function(){
-  startClass("Math.", 60)();
+  startClass("Math.", 60);
 });
 var thursday_fourth_class = schedule.scheduleJob("55 11 * * 4", function(){
-  startClass("B1", 30)();
+  startClass("B1", 30);
 });
 var thursday_fifth_class = schedule.scheduleJob("25 12 * * 4", function(){
-  startClass("中文", 30)();
+  startClass("中文", 30);
 });
 
 // Friday Classes
 var friday_first_class = schedule.scheduleJob("25 8 * * 5", function(){
-  startClass("中文", 60)();
+  startClass("中文", 60);
 });
 var friday_second_class = schedule.scheduleJob("35 9 * * 5", function(){
-  startClass("English", 60)();
+  startClass("English", 60);
 });
 var friday_third_class = schedule.scheduleJob("45 10 * * 5", function(){
-  startClass("Math.", 60)();
+  startClass("Math.", 60);
 });
 var friday_fourth_class = schedule.scheduleJob("55 11 * * 5", function(){
-  startClass("B3", 30)();
+  startClass("B3", 30);
 });
 var friday_fifth_class = schedule.scheduleJob("25 12 * * 5", function(){
-  startClass("B2", 30)();
+  startClass("B2", 30);
 });
 
 // After school
