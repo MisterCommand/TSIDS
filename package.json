@@ -9,6 +9,7 @@
   "author": "MisterCommand",
   "license": "MIT",
   "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
     "date-and-time": "^0.7.0",
     "dotenv": "^8.2.0",
     "feed-read-parser": "^1.0.2",

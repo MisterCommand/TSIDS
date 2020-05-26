@@ -9,6 +9,7 @@ var hko = require('./components/hko.js'); // Component: hko
 var homework = require('./components/homework.js'); // Component: homework
 var specialEvent = require('./components/specialEvent.js'); // Component: specialEvent
 var marquee = require('./components/marquee.js'); // Component: marquee
+var scraper = require('./components/scraper.js'); // Component: scraper
 
 // ------------------------------------------------
 
@@ -198,7 +199,7 @@ function futureHW() {
         console.log("已更新未來功課" + " (" + timestamp() + ")")
     })
     .catch((error) => {
-        console.log("無法更新未來功課" + error + " (" + timestamp() + ")")
+        console.log("無法更新未來功課：" + error + " (" + timestamp() + ")")
     })
 };
 
@@ -219,6 +220,19 @@ function CCWeather() {
       return wMessage;
     };
   });
+}
+
+// Fetch news
+var news = [];
+function fetchNews() {
+  scraper.news()
+  .then((data) => {
+    news = data;
+    console.log("已獲取新聞" + " (" + timestamp() + ")")
+  })
+  .catch((error) => {
+    console.log("無法獲取新聞：" + error + " (" + timestamp() + ")")
+  })
 }
 
 // ------------------------------------------------
@@ -310,6 +324,10 @@ function marqueeUpdate() {
           } else if (value == "%swr%") {
             fetchSpecialWeatherReminder();
             setTimeout(() => {data[data.findIndex(value => value == "%swr%")] = remind;}, 3000);
+            return value
+          } else if (value == "%news%") {
+            fetchNews();
+            setTimeout(() => {data[data.findIndex(value => value == "%news%")] = news.join(" 🌐 ");}, 3000);
             return value
           } else {
             return value
