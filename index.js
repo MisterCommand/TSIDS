@@ -13,7 +13,7 @@ var scraper = require('./components/scraper.js'); // Component: scraper
 
 // ------------------------------------------------
 
-var version = "1.5";
+var version = "1.";
 
 // ------------------------------------------------
 
