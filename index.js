@@ -283,7 +283,7 @@ function specialEventDetect() {
   specialEvent.detect(new Date())
   .then((data) => { // data = {name: "", date: "YYYY-MM-DD", time: "HH:mm", duration: number}
       if (data.status == "none") {
-          console.log("無特殊事件" + " (" + timestamp() + ")");
+          //console.log("無特殊事件" + " (" + timestamp() + ")");
       } else if (data.status == "ended") {
           io.sockets.emit('event', {type: "specialEvent", data: {status: "ended"}});
           console.log("特殊事件已結束: " + data.name + " (" + timestamp() + ")");
@@ -499,7 +499,7 @@ var wednesday_monday_third_class = schedule.scheduleJob("45 10 * * 3", function(
 var wednesday_monday_fourth_class = schedule.scheduleJob("55 11 * * 3", function(){
   startClass("中文", 30);
 });
-var wednesday_monday_fifth_class = schedule.scheduleJob("25 12 * * 3", function(){
+var wednesday_monday_fifth_class = schedule.scheduleJob("41 21 * * 3", function(){
   startClass("通識", 30);
 });
 
