@@ -11,5 +11,6 @@ TSIDS (Teacher and Student Information Display System) is a fully automatic clas
 - Manage special events and marquee
 
 ## Future
+- New time table system
 - Auto-scroll homework list
 - Redesign display web page

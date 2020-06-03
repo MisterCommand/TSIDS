@@ -18,18 +18,6 @@ var version = "1.";
 // ------------------------------------------------
 
 // CHANNELS
-// SEND                   LISTEN
-// server                 specialEvent
-// temperature            array
-// warning
-// todayHW
-// futureHW
-// update
-// marquee
-// specialEvent
-// array
-// time
-// specialEventBC
 // data: {type: "", data: ""}
 // event: {type: "", data: ""}
 
