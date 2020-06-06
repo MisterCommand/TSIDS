@@ -18,7 +18,7 @@ function news() {
                         newsList.push(text.replace("\n\t\t\n\t\t\t\t\t",''))
                     }
                 })
-                resolve(newsList)
+                resolve(html)
             } else {
                 reject(error)
             }
