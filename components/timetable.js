@@ -56,7 +56,7 @@ var lessons = {
         {type: "class", subject: "Math.", start: "10:45", end: "11:45", duration: 60},
         {type: "recess", NextSubject: "B3", start: "11:45", end: "11:55", duration: 10},
         {type: "class", subject: "B3", start: "11:55", end: "12:25", duration: 30},
-        {type: "class", subject: "B2", start: "23:18", end: "12:55", duration: 30},
+        {type: "class", subject: "B2", start: "12:25", end: "12:55", duration: 30},
         {type: "end", start: "21:59"},
     ]
 }
