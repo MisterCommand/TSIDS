@@ -214,14 +214,14 @@ function CCWeather() {
 // Fetch news
 var news = [];
 function fetchNews() {
-  scraper.news()
-  .then((data) => {
-    news = data;
-    console.log("已獲取新聞" + " (" + timestamp() + ")")
-  })
-  .catch((error) => {
-    console.log("無法獲取新聞：" + error + " (" + timestamp() + ")")
-  })
+  // scraper.news()
+  // .then((data) => {
+  //   news = data;
+  //   console.log("已獲取新聞" + " (" + timestamp() + ")")
+  // })
+  // .catch((error) => {
+  //   console.log("無法獲取新聞：" + error + " (" + timestamp() + ")")
+  // })
 }
 
 // ------------------------------------------------
