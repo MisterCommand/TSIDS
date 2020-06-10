@@ -5,6 +5,7 @@ require('dotenv').config()
 var date = require('date-and-time');
 var request = require('request');
 var schedule = require('node-schedule');
+const log = require('simple-node-logger').createSimpleLogger('log.log');
 var hko = require('./components/hko.js'); // Component: hko
 var homework = require('./components/homework.js'); // Component: homework
 var specialEvent = require('./components/specialEvent.js'); // Component: specialEvent
@@ -68,7 +69,7 @@ function handler (req, res) {
 
 // Send connected message
 io.sockets.on('connection', function (socket) {
-  console.log("A new client connected" + " (" + timestamp() + ")");
+  log.info("A new client connected");
   fetchTemp();
   fetchWarning();
   eclass();
@@ -84,7 +85,7 @@ io.sockets.on('connection', function (socket) {
 // Send disconnected message
 io.sockets.on('disconnect', function (socket) {
   socket.emit('server', { status: 'disconnected' });
-  console.log("A client disconnected" + " (" + timestamp() + ")")
+  log.info("A client disconnected")
 });
 
 
@@ -93,11 +94,11 @@ io.sockets.on('disconnect', function (socket) {
 function fetchTemp() {
   hko.temp()
     .then((data) => {
-        console.log("溫度已更新：" + data + " (" + timestamp() + ")");
+        log.info("溫度已更新：" + data);
         io.sockets.emit('data', {type: "temperature", data: data + "°C"});
     })
     .catch((error) => {
-      console.log("無法連接到香港天文台分區天氣API，部分功能可能受限。錯誤信息：" + error + " (" + timestamp() + ")");
+      log.info("無法連接到香港天文台分區天氣API，部分功能可能受限。錯誤信息：" + error);
     })
 };
 
@@ -107,10 +108,10 @@ function fetchSpecialWeatherReminder() {
   hko.specialWeatherWarning()
     .then((data) => {
         remind = data;
-        console.log("特別天氣提示："+data);
+        log.info("特別天氣提示："+data);
     })
     .catch((error) => {
-        console.log("無法連接到香港天文台特別天氣提示API，部分功能可能受限。錯誤信息：" + error + " (" + timestamp() + ")");
+        log.info("無法連接到香港天文台特別天氣提示API，部分功能可能受限。錯誤信息：" + error);
     })
 }
 
@@ -119,10 +120,10 @@ function fetchWarning() {
   hko.weatherWarning()
     .then((data) => {
       io.sockets.emit('data', {type: "warning", data: data});
-      console.log("氣象警告已更新：" + data  + " (" + timestamp() + ")");
+      log.info("氣象警告已更新：" + data );
     })
     .catch((error) => {
-      console.log("無法連接到香港天文台氣象警告，部分功能可能受限。錯誤信息：" + error + " (" + timestamp() + ")");
+      log.info("無法連接到香港天文台氣象警告，部分功能可能受限。錯誤信息：" + error);
     })
 };
 
@@ -132,10 +133,10 @@ function fetchWarning() {
 function connectDB() {
   homework.connect()
     .then(() => {
-        console.log("數據庫連接成功" + " (" + timestamp() + ")")
+        log.info("數據庫連接成功")
   })
     .catch((error) => {
-        console.log("數據庫連接失敗，部分功能可能受限。"+ " (" + timestamp() + ")")
+        log.info("數據庫連接失敗，部分功能可能受限。"+ " (" + timestamp() + ")")
   })
 }
 
@@ -145,7 +146,7 @@ var last_update = "";
 function eclass() {
   homework.update()
     .then(() => {
-        console.log("數據庫已更新" + " (" + timestamp() + ")");
+        log.info("數據庫已更新");
         last_update = new Date;
         last_update = date.format(last_update, 'HH:mm:ss');
         io.sockets.emit("data", {type: "update", data: last_update});
@@ -153,7 +154,7 @@ function eclass() {
         futureHW();
     })
     .catch((error) => {
-        console.log("無法連接更新服務" + error + " (" + timestamp() + ")")
+        log.info("無法連接更新服務" + error)
     })
 };
 
@@ -167,10 +168,10 @@ function todayHW() {
             submit: results.map((value) => { return value.submit })
         };
         io.sockets.emit('data', {type: "todayHW", data: data});
-        console.log("已更新今日功課" + " (" + timestamp() + ")")
+        log.info("已更新今日功課")
     })
     .catch((error) => {
-        console.log("無法更新今日功課" + error + " (" + timestamp() + ")")
+        log.info("無法更新今日功課" + error)
     })
 };
 
@@ -185,10 +186,10 @@ function futureHW() {
             submit: results.map((value) => { return value.submit })
         };
         io.sockets.emit('data', {type: "futureHW", data: data});
-        console.log("已更新未來功課" + " (" + timestamp() + ")")
+        log.info("已更新未來功課")
     })
     .catch((error) => {
-        console.log("無法更新未來功課：" + error + " (" + timestamp() + ")")
+        log.info("無法更新未來功課：" + error)
     })
 };
 
@@ -197,7 +198,7 @@ var wMessage = "";
 function CCWeather() {
   request(process.env.URL_CCWEATHER, function(error, response, body) {
     if (error) {
-      console.log("無法連接彩雲天氣" + " (" + timestamp() + ")");
+      log.info("無法連接彩雲天氣");
     } else {
       let content = JSON.parse(body);
       let pro30min = content.result.minutely.probability[0] * 100;
@@ -205,7 +206,7 @@ function CCWeather() {
       let pro1h30m = content.result.minutely.probability[2] * 100;
       let pro2h = content.result.minutely.probability[3] * 100;
       wMessage = "降雨概率：半小時：" + Math.round(pro30min) + "%   一小時：" + Math.round(pro1h) + "%   一個半小時：" + Math.round(pro1h30m) + "%   兩小時：" + Math.round(pro2h) + "%";
-      console.log("降雨概率已更新" + " (" + timestamp() + ")");
+      log.info("降雨概率已更新");
       return wMessage;
     };
   });
@@ -217,10 +218,10 @@ function fetchNews() {
   // scraper.news()
   // .then((data) => {
   //   news = data;
-  //   console.log("已獲取新聞" + " (" + timestamp() + ")")
+  //   log.info("已獲取新聞")
   // })
   // .catch((error) => {
-  //   console.log("無法獲取新聞：" + error + " (" + timestamp() + ")")
+  //   log.info("無法獲取新聞：" + error)
   // })
 }
 
@@ -234,10 +235,10 @@ io.sockets.on('connection', function (socket) {
       case "specialEvent": // SOCKETIO -> File
           specialEvent.update(data.data) // data = [{name: "", date: "YYYY-MM-DD", time: "HH:mm", duration: number}]
             .then(() => {
-                console.log("特殊事件時間表更新（接收）" + " (" + timestamp() + ")");
+                log.info("特殊事件時間表更新（接收）");
             })
             .catch((error) => {
-                console.log("特殊事件時間表更新（接收）錯誤 " + error + " (" + timestamp() + ")");
+                log.info("特殊事件時間表更新（接收）錯誤 " + error);
             })
         break
       
@@ -245,10 +246,10 @@ io.sockets.on('connection', function (socket) {
         marquee.update(data.data) // data = [string]
           .then(() => {
               marqueeUpdate();
-              console.log("信息滾動條更新（接收）" + " (" + timestamp() + ")");
+              log.info("信息滾動條更新（接收）");
           })
           .catch((error) => {
-              console.log("信息滾動條更新（接收）錯誤 " + error + " (" + timestamp() + ")");
+              log.info("信息滾動條更新（接收）錯誤 " + error);
           })
         break
     }
@@ -259,11 +260,11 @@ io.sockets.on('connection', function (socket) {
 function fileJSON() {
   specialEvent.get()
     .then((data) => { // data = [{name: "", date: "YYYY-MM-DD", time: "HH:mm", duration: number}]
-        console.log("特殊事件時間表更新（發送）" + " (" + timestamp() + ")");
+        log.info("特殊事件時間表更新（發送）");
         io.sockets.emit('data', {type: "specialEvent", data: data});
     })
     .catch((error) => {
-        console.log("特殊事件時間表更新（接收）錯誤: " + error + " (" + timestamp() + ")");
+        log.info("特殊事件時間表更新（接收）錯誤: " + error);
     })
 }
 
@@ -272,17 +273,17 @@ function specialEventDetect() {
   specialEvent.detect(new Date())
   .then((data) => { // data = {name: "", date: "YYYY-MM-DD", time: "HH:mm", duration: number}
       if (data.status == "none") {
-          // console.log("無特殊事件" + " (" + timestamp() + ")");
+          // log.info("無特殊事件");
       } else if (data.status == "ended") {
           io.sockets.emit('event', {type: "specialEvent", data: {status: "ended"}});
-          console.log("特殊事件已結束: " + data.name + " (" + timestamp() + ")");
+          log.info("特殊事件已結束: " + data.name);
       } else {
           io.sockets.emit('event', {type: "specialEvent", data: data});
-          console.log("特殊事件: " + data.name + " (" + timestamp() + ")");
+          log.info("特殊事件: " + data.name);
       }
   })
   .catch((error) => {
-      console.log("特殊事件更新錯誤: " + error + " (" + timestamp() + ")");
+      log.info("特殊事件更新錯誤: " + error);
   })
 }
 
@@ -307,10 +308,10 @@ function marqueeArray() {
   marquee.get()
   .then((data) => { // data = [string]
       io.sockets.emit('data', {type: "array", data: data});
-      console.log("信息滾動條更新（發送）: " + data + " (" + timestamp() + ")");
+      log.info("信息滾動條更新（發送）: " + data);
   })
   .catch((error) => {
-      console.log("信息滾動條更新（發送）錯誤: " + error + " (" + timestamp() + ")");
+      log.info("信息滾動條更新（發送）錯誤: " + error);
   })
 }
 
@@ -339,27 +340,27 @@ function marqueeUpdate() {
         })
         setTimeout(function () {
           io.sockets.emit('data', {type: "marquee", data: data.join("          ")});
-          console.log("信息滾動條已更新：" + data.join("          ")  + " (" + timestamp() + ")");
+          log.info("信息滾動條已更新：" + data.join("          ") );
         }, 8000);
     })
     .catch((error) => {
-        console.log("信息滾動條更新（發送）錯誤: " + error + " (" + timestamp() + ")");
+        log.info("信息滾動條更新（發送）錯誤: " + error);
     })
 }
 
 // ------------------------------------------------
 
 async function check() {
-  console.log("歡迎使用 TSIDS V" + version);
-  console.log("開始自檢中");
-  console.log("測試服務器數據庫連線");
+  log.info("歡迎使用 TSIDS V" + version);
+  log.info("開始自檢中");
+  log.info("測試服務器數據庫連線");
   connectDB();
-  console.log("測試天文台 RSS 連線");
+  log.info("測試天文台 RSS 連線");
   fetchTemp();
   fetchWarning();
   marqueeUpdate();
   app.listen(3000);
-  setTimeout(function() {console.log("自檢完成，服務啓動完成")}, 3000)
+  setTimeout(function() {log.info("自檢完成，服務啓動完成")}, 3000)
 }
 check();
 
@@ -396,5 +397,5 @@ function recess(nextClass) {
 };
 function startClass(currentClass, duration) {
   io.sockets.emit('event', {type: "class", data: {currentClass: currentClass, duration: duration}});
-  console.log("課程: " + currentClass + "(" + duration + ")" + " (" + timestamp() + ")");
+  log.info("課程: " + currentClass + "(" + duration + ")");
 };

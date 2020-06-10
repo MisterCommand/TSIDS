@@ -47,7 +47,7 @@ var lessons = {
         {type: "class", subject: "中文", start: "12:25", end: "12:55", duration: 30},
         {type: "end", start: "12:55"},
     ],
-    6: [
+    5: [
         {type: "start", start: "8:15"},
         {type: "class", subject: "中文", start: "8:25", end: "9:25", duration: 60},
         {type: "recess", NextSubject: "English", start: "9:25", end: "9:35", duration: 10},
@@ -58,23 +58,26 @@ var lessons = {
         {type: "class", subject: "B3", start: "11:55", end: "12:25", duration: 30},
         {type: "class", subject: "B2", start: "12:25", end: "12:55", duration: 30},
         {type: "end", start: "21:59"},
-    ]
+    ],
 }
 
 function detect(time) { // Return lesson object
-    // var weekday = time.getDay()
     var weekday = time.getDay();
     var hour = time.getHours();
     var minute = time.getMinutes();
-    var match = lessons[weekday].some((value) => { // Check start time matched
-        return value.start.split(":")[0] == hour && value.start.split(":")[1] == minute
-    })
-    if (match) {
-        return lessons[weekday].find((value) => {
+    if (weekday > 0 && weekday < 6) { // Weekday is between Monday and Friday
+        var match = lessons[weekday].some((value) => { // Check start time matched
             return value.start.split(":")[0] == hour && value.start.split(":")[1] == minute
         })
-    } else if (hour <= lessons[weekday][0].start.split(":")[0] && minute <= lessons[weekday][0].start.split(":")[1]) { // Check time is before school start
-        return lessons[weekday][0]
+        if (match) {
+            return lessons[weekday].find((value) => {
+                return value.start.split(":")[0] == hour && value.start.split(":")[1] == minute
+            })
+        } else if (hour <= lessons[weekday][0].start.split(":")[0] && minute <= lessons[weekday][0].start.split(":")[1]) { // Check time is before school start
+            return lessons[weekday][0]
+        } else {
+            return false
+        }
     } else {
         return false
     }
