@@ -16,7 +16,7 @@ var scraper = require('./components/scraper.js'); // Component: scraper
 
 // ------------------------------------------------
 
-var version = "1.6";
+var version = "2.0";
 var config = {
     components: {
         event: true,
