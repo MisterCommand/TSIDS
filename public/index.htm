@@ -1,0 +1,304 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="styles.css">
+        <script type="text/javascript" src="jquery-3.3.1.min.js"></script>
+        <script type="text/javascript" src="anime.min.js"></script>
+        <script src="progressbar.min.js"></script>
+        <script type="text/javascript" src="components/homework.js"></script>
+        <script type="text/javascript" src="components/now.js"></script>
+        <script type="text/javascript" src="components/homeworkcard.js"></script>
+        <script type="text/javascript" src="components/info.js"></script>
+        <script type="text/javascript" src="components/timetable.js"></script>
+        <script src="socketio.js"></script>  <!-- Socket IO-->
+    </head>
+    <body>
+        <div class="topbar">
+            <div id="temperature">00.0°C</div>
+            <div class="warning" id="warning_0"></div>
+            <div class="warning" id="warning_1"></div>
+            <div class="warning" id="warning_2"></div>
+            <div class="warning" id="warning_3"></div>
+            <div class="warning" id="warning_4"></div>
+            <div class="time">
+                <div id="hm">00:00</div>
+                <div id="s">00</div>
+                <div id="date">0000年00月00日</div>
+            </div>
+        </div>
+        <div class="content">
+            <div class="card now" style="grid-area: card1">
+                <div class="title">進行中</div>
+                <div style="height:60%;width:100%;display:flex;align-items:center;">
+                    <div id="now-container"></div>
+                </div>
+            </div>
+            <div class="card hw"  style="grid-area: card2; background: rgba(255, 255, 255, 0.11)">
+                <div class="title">功課</div>
+                <div id="homework-card-container"></div>
+            </div>
+            <div class="card" style="grid-area: card3">
+                <div class="title">資訊</div>
+                <div id="info-container"></div>
+            </div>
+            <div class="main" style="grid-area: main">
+                <div id="homework-container"></div>
+                <div id="countdown-container">
+                    <div id="countdown"></div>
+                </div>
+            </div>
+        </div>
+    </body>
+
+    <script>
+        var displaying = "homework";
+        var card_background_color = "rgba(255, 255, 255, 0.05)";
+        var card_selected_background_color = "rgba(255, 255, 255, 0.11)";
+        var lesson = {type: "init", index: -1}; // Current lesson
+
+        var homework = new Homework("#homework-container");
+        var now = new Now("#now-container");
+        var hw = new HomeworkCard("#homework-card-container");
+        var info = new Info("#info-container");
+
+        $.ajaxSetup({ cache: false }); // Disable cache
+
+        // When page resize -> wait 500ms -> reset elements
+        $(window).bind('resize', function(e){
+            window.resizeEvt;
+            $(window).resize(function(){
+                clearTimeout(window.resizeEvt);
+                window.resizeEvt = setTimeout(function(){
+                    $(".homework").attr('style','');
+                    $("#homework-container").attr('style','');
+                    $("#countdown-container").attr('style','');
+                    homework.animateIn();
+                }, 500);
+            });
+        });
+
+        function switchMain(main) {
+            if (main != displaying) {
+                if (main == "homework") {
+                    displaying = "homework";
+                    var to_homework = anime.timeline({
+                        duration: $("#homework-container").height() * 5
+                    })
+                    to_homework
+                        .add({ // Homework move down (to defualt position)
+                            targets: "#homework-container",
+                            translateY: 0,
+                            easing: "easeInOutQuad"
+                        },0)
+                        .add({ // Homework card brighted
+                            targets: ".hw",
+                            backgroundColor: card_selected_background_color,
+                            easing: "linear"
+                        }, 0)
+                        .add({ // Countdown move up and fade out
+                            targets: "#countdown-container",
+                            translateY: $("#countdown-container").height() * -1,
+                            opacity: [1, 0],
+                            easing: "easeInOutQuad",
+                        }, 0)
+                        .add({ // Countdown card darken
+                            targets: ".now",
+                            backgroundColor: card_background_color,
+                            easing: "linear"
+                        }, 0)
+
+
+                } else if (main == "countdown") {
+                    displaying = "countdown";
+                    var to_countdown = anime.timeline({
+                        duration: $("#homework-container").height() * 5
+                    })
+                    to_countdown
+                        .add({ // Countdown move down (to defualt position) and fade in
+                            targets: "#countdown-container",
+                            translateY: [$("#countdown-container").height() * -1, 0],
+                            opacity: [0, 1],
+                            easing: "easeInOutQuad",
+                        }, 0)
+                        .add({ // Countdown card darken
+                            targets: ".now",
+                            backgroundColor: card_selected_background_color,
+                            easing: "linear"
+                        }, 0)
+                        .add({ // Homework move up
+                            targets: "#homework-container",
+                            translateY: $("#homework-container").height() * 1.1,
+                            easing: "easeInOutQuad"
+                        },0)
+                        .add({ // Homework card darken
+                            targets: ".hw",
+                            backgroundColor: card_background_color,
+                            easing: "linear"
+                        }, 0)
+                }
+            }
+        }
+
+        // Countdown clock
+        var bar = new ProgressBar.Circle('#countdown', {
+            color: '#aaa',
+            strokeWidth: 5,
+            trailWidth: 1,
+            easing: 'linear',
+            duration: 6000,
+            trailColor: "#2C2C2C",
+            text: {
+                autoStyleContainer: true
+            },
+            from: { color: '#58FA58', width: 1 },
+            to: { color: '#FA5858', width: 5 }
+        });
+
+        function startCountdown(sec) {
+            bar.set(0);
+            bar.animate(1.0, {
+                duration: sec*1000,
+                from: { color: '#58FA58', width: 1 },
+                to: { color: '#FA5858', width: 5 },
+                step: function(state, circle) {
+                    circle.path.setAttribute('stroke', state.color);
+                    circle.path.setAttribute('stroke-width', state.width);
+                    circle.path.style.strokeLinecap = 'round';
+                    if (circle.value() == 0) {
+                        circle.setText('');
+                    } else {
+                        circle.setText(Math.ceil((sec-circle.value()*sec)/60));
+                    }
+                }
+            });
+            bar.text.style.fontFamily = 'sans-serif, "Raleway", Helvetica';
+            bar.text.style.fontSize = '10vw';
+            bar.text.style.color = 'rgba(255,255,255,0.60)';
+        }
+
+        mode("init");
+        function mode(mode) {
+            switch (mode) {
+                case "init": // Initialize
+                    homework.start();
+                    hw.overview();
+                    anime({
+                        targets: ".card",
+                        translateX: [-500, 0],
+                        opacity: [0, 1],
+                        duration: 1000,
+                        easing: "easeOutQuad",
+                        delay: anime.stagger(300)
+                    })
+                    break
+                case "recess":
+                    switchMain("homework");
+                    homework.start();
+                    hw.overview();
+                    break
+                case "class":
+                    switchMain("countdown");
+                    homework.stop();
+                    hw.start();
+                    console.log(hw.started)
+            }
+        }
+
+        // -----------------------------------------------------------------------------------------------------
+        // DATE AND TIME --- SERVER COMMUNICATION
+
+        dat()
+        function dat() {
+            let n = new Date();
+            let [year, month, date, hour, minute, second] = [n.getFullYear(), checkTime(n.getMonth()+1), checkTime(n.getDate()), checkTime(n.getHours()), checkTime(n.getMinutes()), checkTime(n.getSeconds())];
+            $("#hm").html(hour + ":" + minute);
+            $("#s").html(second);
+            $("#date").html(year + "年" + month + "月" + date + "日");
+            setTimeout(dat, 1000);
+
+            // Timetable
+            let item = detect();
+            if (item && typeof item !== 'undefined') { // Current item is defined
+                if (item.index != lesson.index) { // If different event object
+                    lesson = item; // Copy object
+                    // Set Now Card
+                    switch (item.type) {
+                        case "start":
+                            mode("recess");
+                            now.set("上課前", "", "")
+                            break
+                        case "end":
+                            mode("recess");
+                            now.set("放學後", "", "")
+                            break
+                        case "recess":
+                            mode("recess");
+                            now.set("小息", item.start, item.end)
+                            break
+                        case "class":
+                            mode("class");
+                            startCountdown(item.duration);
+                            now.set(item.subject, item.start, item.end);
+                            break
+                    }
+                }
+            }
+
+        }
+        function checkTime(i) { // Add 0
+            if (i < 10) {i = "0" + i};
+            return i;
+        }
+        function preSchool() { // Return true if before 08:30
+            let now = new Date();
+            return now.getHours < 8 || (now.getHours == 8 && now.getMinutes <= 30)
+        }
+
+        var socket = io('http://localhost:3000'); // DEPLOY CHANGE HERE
+        socket.emit('client', "connected");
+
+        // SOCKET IO (CHANNEL: data)
+        socket.on('data', function (data) {
+            switch (data.type) {
+                case "todayHW":
+                    if (preSchool()) {
+                        homework.import(data.data);
+                    }
+                    hw.set("today", data.data.length);
+                    break
+
+                case "futureHW":
+                    if (!preSchool()) {
+                        homework.import(data.data);
+                    }
+                    hw.set("future", data.data.length);
+                    hw.set("homework", data.data);
+                    break
+
+                case "update":
+                    break
+
+                case "temperature":
+                    $("#temperature").html(data.data);
+                    break
+
+                case "warning":
+                    data.data.forEach((item, index) => {
+                        if (item != "現時並無警告生效") {
+                            $("#warning_" + index).html(`<img src="icon/${item}.gif">`)
+                        }
+                    });
+                    break
+
+                case "marquee":
+                    info.set(data.data);
+                    break
+            }
+        });
+    </script>
+
+</html>
+
+
+

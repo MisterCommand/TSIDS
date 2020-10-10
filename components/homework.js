@@ -37,11 +37,16 @@ var update = function() {
 
 var fetchToday = function(today) { // today = YYYY-MM-DD
     return new Promise((resolve, reject) => {
-        sql = "SELECT * FROM 10b WHERE end = '" + today + "'AND ( subject = '中國語文' OR subject = '英國語文' OR subject = '數學(必修部分)' OR subject = '通識' )";
+        sql = "SELECT * FROM 11b WHERE end = '" + today + "'AND ( subject = '中國語文' OR subject = '英國語文' OR subject = '數學(必修部分)' OR subject = '通識' )";
         connection.query(sql, function (error, results, fields) {
             if (error) {
                 reject(error)
             } else {
+                results = results.map((item) => {
+                    item.start = new Date(item.start).toDateString();
+                    item.end = new Date(item.end).toDateString();
+                    return item
+                })
                 resolve(results)
             }
         })
@@ -50,11 +55,16 @@ var fetchToday = function(today) { // today = YYYY-MM-DD
 
 var fetchFuture = function(tmr, fd) { // tmr, fd = YYYY-MM-DD
     return new Promise((resolve, reject) => {
-        sql = "SELECT * FROM 10b WHERE end BETWEEN '" + tmr + "' AND '" + fd + "' AND ( subject = '中國語文' OR subject = '英國語文' OR subject = '數學(必修部分)' OR subject = '通識' ) ORDER BY end ASC;";
+        sql = "SELECT * FROM 11b WHERE end BETWEEN '" + tmr + "' AND '" + fd + "' AND ( subject = '中國語文' OR subject = '英國語文' OR subject = '數學(必修部分)' OR subject = '通識' ) ORDER BY end ASC;";
         connection.query(sql, function (error, results, fields) {
             if (error) {
                 reject(error)
             } else {
+                results = results.map((item) => {
+                    item.start = new Date(item.start).toDateString();
+                    item.end = new Date(item.end).toDateString();
+                    return item
+                })
                 resolve(results)
             }
         })

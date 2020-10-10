@@ -15,6 +15,7 @@ var get = function() {
     })
 }
 
+// NOT IN USE
 var detect = function(now) { // now = date object
     return new Promise((resolve, reject) => {
         let d = date.format(now, 'YYYY-MM-DD');

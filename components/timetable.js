@@ -1,63 +1,55 @@
 var lessons = {
     1: [
         {type: "start", start: "8:15"},
-        {type: "class", subject: "中文", start: "8:25", end: "9:25", duration: 60},
-        {type: "recess", NextSubject: "B1", start: "9:25", end: "9:35", duration: 10},
-        {type: "class", subject: "B1", start: "9:35", end: "10:35", duration: 60},
-        {type: "recess", NextSubject: "通識", start: "10:35", end: "10:45", duration: 10},
-        {type: "class", subject: "通識", start: "10:45", end: "11:45", duration: 60},
-        {type: "recess", NextSubject: "Math.", start: "11:45", end: "11:55", duration: 10},
-        {type: "class", subject: "Math.", start: "11:55", end: "12:25", duration: 30},
-        {type: "class", subject: "PE", start: "12:25", end: "12:55", duration: 30},
-        {type: "end", start: "12:55"},
+        {type: "class", subject: "B3", start: "8:30", end: "9:40", duration: 70},
+        {type: "recess", NextSubject: "Math.", start: "9:40", end: "9:55", duration: 15},
+        {type: "class", subject: "Math.", start: "9:55", end: "10:30", duration: 35},
+        {type: "class", subject: "中文", start: "10:30", end: "11:05", duration: 35},
+        {type: "recess", NextSubject: "B1", start: "11:05", end: "11:20", duration: 15},
+        {type: "class", subject: "B1", start: "11:20", end: "12:30", duration: 70},
+        {type: "class", subject: "PE", start: "12:30", end: "13:05", duration: 35},
+        {type: "end", start: "13:05"}
     ],
     2: [
         {type: "start", start: "8:15"},
-        {type: "class", subject: "B2", start: "8:25", end: "9:25", duration: 60},
-        {type: "recess", NextSubject: "通識", start: "9:25", end: "9:35", duration: 10},
-        {type: "class", subject: "通識", start: "9:35", end: "10:35", duration: 60},
-        {type: "recess", NextSubject: "B3", start: "10:35", end: "10:45", duration: 10},
-        {type: "class", subject: "B3", start: "10:45", end: "11:45", duration: 60},
-        {type: "recess", NextSubject: "Math.", start: "11:45", end: "11:55", duration: 10},
-        {type: "class", subject: "Math.", start: "11:55", end: "12:25", duration: 30},
-        {type: "class", subject: "English", start: "12:25", end: "12:55", duration: 30},
-        {type: "end", start: "12:55"},
+        {type: "class", subject: "B3", start: "8:30", end: "9:40", duration: 70},
+        {type: "recess", NextSubject: "Math.", start: "9:40", end: "9:55", duration: 15},
+        {type: "class", subject: "Math.", start: "9:55", end: "11:05", duration: 70},
+        {type: "recess", NextSubject: "中文", start: "11:05", end: "11:20", duration: 15},
+        {type: "class", subject: "中文", start: "11:20", end: "12:30", duration: 70},
+        {type: "class", subject: "B2", start: "12:30", end: "13:05", duration: 35},
+        {type: "end", start: "13:05"}
     ],
     3: [
         {type: "start", start: "8:15"},
-        {type: "class", subject: "B2", start: "8:25", end: "9:25", duration: 60},
-        {type: "recess", NextSubject: "B1", start: "9:25", end: "9:35", duration: 10},
-        {type: "class", subject: "B1", start: "9:35", end: "10:35", duration: 60},
-        {type: "recess", NextSubject: "English", start: "10:35", end: "10:45", duration: 10},
-        {type: "class", subject: "English", start: "10:45", end: "11:45", duration: 60},
-        {type: "recess", NextSubject: "中文", start: "11:45", end: "11:55", duration: 10},
-        {type: "class", subject: "中文", start: "11:55", end: "12:25", duration: 30},
-        {type: "class", subject: "通識", start: "12:25", end: "12:55", duration: 30},
-        {type: "end", start: "12:55"},
+        {type: "class", subject: "Math.", start: "8:30", end: "9:40", duration: 70},
+        {type: "recess", NextSubject: "English", start: "9:40", end: "9:55", duration: 15},
+        {type: "class", subject: "English", start: "9:55", end: "11:05", duration: 70},
+        {type: "recess", NextSubject: "通識", start: "11:05", end: "11:20", duration: 15},
+        {type: "class", subject: "通識", start: "11:20", end: "12:30", duration: 70},
+        {type: "class", subject: "B1", start: "12:30", end: "13:05", duration: 35},
+        {type: "end", start: "13:05"}
     ],
     4: [
         {type: "start", start: "8:15"},
-        {type: "class", subject: "B3", start: "8:25", end: "9:25", duration: 60},
-        {type: "recess", NextSubject: "English", start: "9:25", end: "9:35", duration: 10},
-        {type: "class", subject: "English", start: "9:35", end: "10:35", duration: 60},
-        {type: "recess", NextSubject: "Math.", start: "10:35", end: "10:45", duration: 10},
-        {type: "class", subject: "Math.", start: "10:45", end: "11:45", duration: 60},
-        {type: "recess", NextSubject: "B1", start: "11:45", end: "11:55", duration: 10},
-        {type: "class", subject: "B1", start: "11:55", end: "12:25", duration: 30},
-        {type: "class", subject: "中文", start: "12:25", end: "12:55", duration: 30},
-        {type: "end", start: "12:55"},
+        {type: "class", subject: "B1", start: "8:30", end: "9:40", duration: 70},
+        {type: "recess", NextSubject: "中文", start: "9:40", end: "9:55", duration: 15},
+        {type: "class", subject: "中文", start: "9:55", end: "11:05", duration: 70},
+        {type: "recess", NextSubject: "English", start: "11:05", end: "11:20", duration: 15},
+        {type: "class", subject: "English", start: "11:20", end: "12:30", duration: 70},
+        {type: "class", subject: "B3", start: "12:30", end: "13:05", duration: 35},
+        {type: "end", start: "13:05"}
     ],
     5: [
         {type: "start", start: "8:15"},
-        {type: "class", subject: "中文", start: "8:25", end: "9:25", duration: 60},
-        {type: "recess", NextSubject: "English", start: "9:25", end: "9:35", duration: 10},
-        {type: "class", subject: "English", start: "9:35", end: "10:35", duration: 60},
-        {type: "recess", NextSubject: "Math.", start: "10:35", end: "10:45", duration: 10},
-        {type: "class", subject: "Math.", start: "10:45", end: "11:45", duration: 60},
-        {type: "recess", NextSubject: "B3", start: "11:45", end: "11:55", duration: 10},
-        {type: "class", subject: "B3", start: "11:55", end: "12:25", duration: 30},
-        {type: "class", subject: "B2", start: "12:25", end: "12:55", duration: 30},
-        {type: "end", start: "12:55"},
+        {type: "class", subject: "B2", start: "8:30", end: "9:40", duration: 70},
+        {type: "recess", NextSubject: "通識", start: "9:40", end: "9:55", duration: 15},
+        {type: "class", subject: "通識", start: "9:55", end: "11:05", duration: 70},
+        {type: "recess", NextSubject: "中文", start: "11:05", end: "11:20", duration: 15},
+        {type: "class", subject: "中文", start: "11:20", end: "11:30", duration: 70},
+        {type: "class", subject: "CT", start: "11:55", end: "12:25", duration: 35},
+        {type: "class", subject: "Math.", start: "12:30", end: "13:05", duration: 35},
+        {type: "end", start: "13:05"}
     ],
 }
 
@@ -83,4 +75,9 @@ function detect(time) { // Return lesson object
     }
 }
 
+function get() {
+    return lessons
+}
+
 exports.detect = detect;
+exports.get = get;

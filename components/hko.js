@@ -32,6 +32,7 @@ var specialWeatherWarning = function() {
             } else {
             let content = JSON.parse(body);
             let reminds = content.swt; // Array of all special reminders
+            remind = "";
             if (reminds.length > 0) {
                 reminds.forEach(element => {
                 remind = remind + " " + element["desc"];
