@@ -261,7 +261,7 @@ function CCWeather() {
                 let pro1h = content.result.minutely.probability[1] * 100;
                 let pro1h30m = content.result.minutely.probability[2] * 100;
                 let pro2h = content.result.minutely.probability[3] * 100;
-                let output = ["降雨概率：\n半小時：", Math.round(pro30min) + "%", "一小時：" + Math.round(pro1h) + "%", "一個半小時：" + Math.round(pro1h30m) + "%", "兩小時：" + Math.round(pro2h) + "%"];
+                let output = ["降雨概率：", "半小時：", Math.round(pro30min) + "%", "一小時：" + Math.round(pro1h) + "%", "一個半小時：" + Math.round(pro1h30m) + "%", "兩小時：" + Math.round(pro2h) + "%"];
                 log.info("降雨概率已更新");
                 resolve(output);
             };
