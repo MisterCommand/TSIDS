@@ -14,6 +14,14 @@
         <script src="socketio.js"></script>  <!-- Socket IO-->
     </head>
     <body>
+        <div id="model-background" onclick="model()">
+            <div id="model">
+                <div class="list">
+                    <div class="title">觸摸控制</div>
+                    <div class="item">🚫觸摸控制未啓用</div>
+                </div>
+            </div>
+        </div>
         <div class="topbar">
             <div id="temperature">00.0°C</div>
             <div class="warning" id="warning_0"></div>
@@ -56,6 +64,7 @@
         var card_background_color = "rgba(255, 255, 255, 0.05)";
         var card_selected_background_color = "rgba(255, 255, 255, 0.11)";
         var lesson = {type: "init", index: -1}; // Current lesson
+        var showingModel = false;
 
         var homework = new Homework("#homework-container");
         var now = new Now("#now-container");
@@ -140,6 +149,34 @@
             }
         }
 
+        mode("init");
+        function mode(mode) {
+            switch (mode) {
+                case "init": // Initialize
+                    homework.start();
+                    hw.overview();
+                    anime({
+                        targets: ".card",
+                        translateX: [-500, 0],
+                        opacity: [0, 1],
+                        duration: 1000,
+                        easing: "easeOutQuad",
+                        delay: anime.stagger(300)
+                    })
+                    break
+                case "recess":
+                    switchMain("homework");
+                    homework.start();
+                    hw.overview();
+                    break
+                case "class":
+                    switchMain("countdown");
+                    homework.stop();
+                    hw.start();
+                    console.log(hw.started)
+            }
+        }
+
         // Countdown clock
         var bar = new ProgressBar.Circle('#countdown', {
             color: '#aaa',
@@ -177,31 +214,28 @@
             bar.text.style.color = 'rgba(255,255,255,0.60)';
         }
 
-        mode("init");
-        function mode(mode) {
-            switch (mode) {
-                case "init": // Initialize
-                    homework.start();
-                    hw.overview();
-                    anime({
-                        targets: ".card",
-                        translateX: [-500, 0],
-                        opacity: [0, 1],
-                        duration: 1000,
-                        easing: "easeOutQuad",
-                        delay: anime.stagger(300)
-                    })
-                    break
-                case "recess":
-                    switchMain("homework");
-                    homework.start();
-                    hw.overview();
-                    break
-                case "class":
-                    switchMain("countdown");
-                    homework.stop();
-                    hw.start();
-                    console.log(hw.started)
+        // Touch Control
+        function model() {
+            if (showingModel) { // Showing -> fade out
+                anime({
+                    targets: "#model-background",
+                    opacity: [1, 0],
+                    duration: 300,
+                    easing: "linear",
+                    complete: () => {
+                        showingModel = false
+                    }
+                })
+            } else { // Not shwoing -> fade in
+                anime({
+                    targets: "#model-background",
+                    opacity: [0, 1],
+                    duration: 300,
+                    easing: "linear",
+                    complete: () => {
+                        showingModel = true
+                    }
+                })
             }
         }
 
