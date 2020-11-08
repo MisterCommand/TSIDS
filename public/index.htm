@@ -11,14 +11,20 @@
         <script type="text/javascript" src="components/homeworkcard.js"></script>
         <script type="text/javascript" src="components/info.js"></script>
         <script type="text/javascript" src="components/timetable.js"></script>
+        <script type="text/javascript" src="components/draw.js"></script>
         <script src="socketio.js"></script>  <!-- Socket IO-->
     </head>
     <body>
         <div id="model-background" onclick="model()">
-            <div id="model">
-                <div class="list">
+            <div id="model" onclick="event.stopPropagation()">
+                <div class="list" id="menu">
                     <div class="title">觸摸控制</div>
-                    <div class="item">🚫觸摸控制未啓用</div>
+                    <div class="item" onclick="draw.all()">🗳️ 學號抽籤</div>
+                </div>
+                <div class="list" id="draw">
+                    <div class="title">學號抽籤</div>
+                    <div class="item" style="font-size:5vw; align-self: center;">1</div>
+                    <div class="item" style="align-self: left;background-color: rgba(255,255,255,0.05);">再次抽籤（0）</div>
                 </div>
             </div>
         </div>
@@ -70,6 +76,7 @@
         var now = new Now("#now-container");
         var hw = new HomeworkCard("#homework-card-container");
         var info = new Info("#info-container");
+        var draw = new Draw("#model");
 
         $.ajaxSetup({ cache: false }); // Disable cache
 
@@ -153,6 +160,7 @@
         function mode(mode) {
             switch (mode) {
                 case "init": // Initialize
+                    $("#draw").hide(); // Hide draw manu
                     homework.start();
                     hw.overview();
                     anime({
@@ -215,7 +223,7 @@
         }
 
         // Touch Control
-        function model() {
+        function model(close) {
             if (showingModel) { // Showing -> fade out
                 anime({
                     targets: "#model-background",
@@ -223,17 +231,19 @@
                     duration: 300,
                     easing: "linear",
                     complete: () => {
-                        showingModel = false
+                        showingModel = false;
+                        $("#draw").hide();
+                        $("#menu").show();
                     }
                 })
-            } else { // Not shwoing -> fade in
+            } else if (!showingModel && !close) { // Not shwoing -> fade in
                 anime({
                     targets: "#model-background",
                     opacity: [0, 1],
                     duration: 300,
                     easing: "linear",
                     complete: () => {
-                        showingModel = true
+                        showingModel = true;
                     }
                 })
             }

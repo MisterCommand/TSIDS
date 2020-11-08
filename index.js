@@ -23,7 +23,7 @@ var config = {
         homework: true,
         weather: true, // HKO and CCWeather
         marquee: true,
-		control: false,
+		control: true,
 		news: false
     },
     intervals: {
@@ -124,10 +124,10 @@ function start() {
 function stop() {
     if (update) {
         update = false;
-        update_event = true;
-        update_homework = true;
-        update_weather = true;
-        update_marquee = true;
+        clearInterval(update_event);
+        clearInterval(update_homework);
+        clearInterval(update_weather);
+        clearInterval(update_marquee);
     }
 }
 
