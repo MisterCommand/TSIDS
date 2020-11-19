@@ -71,57 +71,56 @@ var events = [];
 function specialEvent(type) {
     if (type == "search") {
         return events.some((value) => { // Return true / false
-            return new Date(value.start) <= new Date() && new Date(value.end) > new Date()
+            return new Date(value.start) <= n && new Date(value.end) > n
         })
     } else { // Return event object
         return events.find((value, index) => {
             value.index = index; // Set index for identifying
-            return new Date(value.start) <= new Date() && new Date(value.end) > new Date()
+            return new Date(value.start) <= n && new Date(value.end) > n
         })
     }
 }
 
 function detect() { // Return lesson object
-    let now = new Date();
-    let weekday = now.getDay();
+    let weekday = n.getDay();
     if (weekday > 0 && weekday <= 6) { // Weekday is between Monday and Friday
 
         // School start time
-        let school_start = new Date()
+        let school_start = new Date(n.getTime())
         school_start.setHours(lessons[weekday][0].start.split(":")[0]);
         school_start.setMinutes(lessons[weekday][0].start.split(":")[1]);
 
         // School end time
-        let school_end = new Date()
+        let school_end = new Date(n.getTime())
         school_end.setHours(lessons[weekday][lessons[weekday].length - 1].start.split(":")[0]);
         school_end.setMinutes(lessons[weekday][lessons[weekday].length - 1].start.split(":")[1]);
 
-        if (now < school_start) { // Before school start
-            return lessons[weekday][0]
-        } else if (now > school_end) { // After school end
-            return lessons[weekday][lessons[weekday].length - 1]
-        } else if (specialEvent("search")) { // Search special event
+        if (specialEvent("search")) { // Search special event
             let output = {... specialEvent("get")};
-            difference = new Date(output.end) - now;
+            difference = new Date(output.end) - n;
             output.duration = (difference / 1000); // Change duration
             output.start = output.start.slice(-5); // Remove date
             output.end = output.end.slice(-5); // Remove Date
             return output
+        } else if (n < school_start) { // Before school start
+            return lessons[weekday][0]
+        } else if (n > school_end) { // After school end
+            return lessons[weekday][lessons[weekday].length - 1]
         } else { // Search lesson
             return lessons[weekday].find((value, index) => {
                 if (value.type == "class" || value.type == "recess") {
                     // Set start and end date
-                    let start = new Date();
+                    let start = new Date(n.getTime());
                     start.setHours(value.start.split(":")[0]);
                     start.setMinutes(value.start.split(":")[1]);
                     start.setSeconds(0);
                     
-                    let end = new Date();
+                    let end = new Date(n.getTime());
                     end.setHours(value.end.split(":")[0]);
                     end.setMinutes(value.end.split(":")[1]);
                     end.setSeconds(0);
-                    if (start <= now && end > now) {
-                        difference = end - now;
+                    if (start <= n && end > n) {
+                        difference = end - n;
                         value.duration = (difference / 1000); // Change duration
                         value.index = index; // Set index for identifying
                         return true

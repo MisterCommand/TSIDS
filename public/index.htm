@@ -77,6 +77,7 @@
         var hw = new HomeworkCard("#homework-card-container");
         var info = new Info("#info-container");
         var draw = new Draw("#model");
+        var n = new Date();
 
         $.ajaxSetup({ cache: false }); // Disable cache
 
@@ -181,7 +182,6 @@
                     switchMain("countdown");
                     homework.stop();
                     hw.start();
-                    console.log(hw.started)
             }
         }
 
@@ -254,7 +254,7 @@
 
         dat()
         function dat() {
-            let n = new Date();
+            n = new Date();
             let [year, month, date, hour, minute, second] = [n.getFullYear(), checkTime(n.getMonth()+1), checkTime(n.getDate()), checkTime(n.getHours()), checkTime(n.getMinutes()), checkTime(n.getSeconds())];
             $("#hm").html(hour + ":" + minute);
             $("#s").html(second);
@@ -290,7 +290,7 @@
             }
 
         }
-        
+
         function checkTime(i) { // Add 0
             if (i < 10) {i = "0" + i};
             return i;
@@ -334,6 +334,10 @@
 
                 case "marquee":
                     info.set(data.data);
+                    break
+                
+                case "specialEvent":
+                    events = data.data;
                     break
             }
         });
