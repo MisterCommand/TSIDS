@@ -21,7 +21,7 @@ var config = {
     components: {
         event: true,
         homework: true,
-        weather: true, // HKO and CCWeather
+        weather: false, // HKO and CCWeather
         marquee: true,
 		control: true,
 		news: false

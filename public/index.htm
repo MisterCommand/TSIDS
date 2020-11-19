@@ -22,9 +22,9 @@
                     <div class="item" onclick="draw.all()">🗳️ 學號抽籤</div>
                 </div>
                 <div class="list" id="draw">
-                    <div class="title">學號抽籤</div>
-                    <div class="item" style="font-size:5vw; align-self: center;">1</div>
-                    <div class="item" style="align-self: left;background-color: rgba(255,255,255,0.05);">再次抽籤（0）</div>
+                    <div class="title">🗳️ 學號抽籤</div>
+                    <div class="item" style="font-size:5vw; align-self: center;"></div>
+                    <div class="item" style="align-self: left;background-color: rgba(255,255,255,0.05);"></div>
                 </div>
             </div>
         </div>
@@ -290,13 +290,10 @@
             }
 
         }
+        
         function checkTime(i) { // Add 0
             if (i < 10) {i = "0" + i};
             return i;
-        }
-        function preSchool() { // Return true if before 08:30
-            let now = new Date();
-            return now.getHours < 8 || (now.getHours == 8 && now.getMinutes <= 30)
         }
 
         var socket = io('http://localhost:3000'); // DEPLOY CHANGE HERE
@@ -306,14 +303,14 @@
         socket.on('data', function (data) {
             switch (data.type) {
                 case "todayHW":
-                    if (preSchool()) {
+                    if (lesson.type == "start") {
                         homework.import(data.data);
                     }
                     hw.set("today", data.data.length);
                     break
 
                 case "futureHW":
-                    if (!preSchool()) {
+                    if (lesson.type != "start") {
                         homework.import(data.data);
                     }
                     hw.set("future", data.data.length);
