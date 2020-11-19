@@ -17,22 +17,6 @@ var scraper = require('./components/scraper.js'); // Component: scraper
 // ------------------------------------------------
 
 var version = "2.0";
-var config = {
-    components: {
-        event: true,
-        homework: true,
-        weather: false, // HKO and CCWeather
-        marquee: true,
-		control: true,
-		news: false
-    },
-    intervals: {
-        event: 1800000,
-        homework: 1800000,
-        weather: 600000,
-        marquee: 900000
-    }
-}
 
 // ------------------------------------------------
 

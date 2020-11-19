@@ -6,6 +6,7 @@
         <script type="text/javascript" src="jquery-3.3.1.min.js"></script>
         <script type="text/javascript" src="anime.min.js"></script>
         <script src="progressbar.min.js"></script>
+        <script type="text/javascript" src="config.js"></script>
         <script type="text/javascript" src="components/homework.js"></script>
         <script type="text/javascript" src="components/now.js"></script>
         <script type="text/javascript" src="components/homeworkcard.js"></script>
@@ -296,7 +297,7 @@
             return i;
         }
 
-        var socket = io('http://localhost:3000'); // DEPLOY CHANGE HERE
+        var socket = io(url); // DEPLOY CHANGE HERE
         socket.emit('client', "connected");
 
         // SOCKET IO (CHANNEL: data)
