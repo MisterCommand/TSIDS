@@ -21,10 +21,17 @@
                 <div class="list" id="menu">
                     <div class="title">觸摸控制</div>
                     <div class="item" onclick="draw.all()">🗳️ 學號抽籤</div>
+                    <div class="item" onclick="draw.chiLesson()">🗳️ 學號抽籤（中文課）</div>
                 </div>
                 <div class="list" id="draw">
                     <div class="title">🗳️ 學號抽籤</div>
-                    <div class="item" style="font-size:5vw; align-self: center;"></div>
+                    <div class="item" style="display: flex; justify-content: space-between">
+                        <div class="item" style="font-size:5vw; flex-grow: 1; flex-shrink: -1; text-align: center"></div>
+                        <div class="item" style="align-self: center; flex-grow: 1; flex-shrink: -1">
+                            <div class="item"></div>
+                            <div class="item"></div>
+                        </div>
+                    </div>
                     <div class="item" style="align-self: left;background-color: rgba(255,255,255,0.05);"></div>
                 </div>
             </div>

@@ -8,6 +8,7 @@ var date = require('date-and-time');
 var request = require('request');
 var schedule = require('node-schedule');
 const log = require('simple-node-logger').createSimpleLogger('log.log');
+var config = require('./config');
 var hko = require('./components/hko.js'); // Component: hko
 var homework = require('./components/homework.js'); // Component: homework
 var specialEvent = require('./components/specialEvent.js'); // Component: specialEvent
