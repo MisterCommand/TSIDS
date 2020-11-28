@@ -13,7 +13,7 @@ var hko = require('./components/hko.js'); // Component: hko
 var homework = require('./components/homework.js'); // Component: homework
 var specialEvent = require('./components/specialEvent.js'); // Component: specialEvent
 var marquee = require('./components/marquee.js'); // Component: marquee
-var scraper = require('./components/scraper.js'); // Component: scraper
+var news = require('./components/news.js'); // Component: scraper
 
 // ------------------------------------------------
 
@@ -257,14 +257,14 @@ function CCWeather() {
 // Fetch news
 function fetchNews() {
     return new Promise((resolve) => {
-		scraper.news()
-			.then((data) => {
-				log.info("已獲取新聞")
+        news.get()
+            .then((data) => {
+                log.warn("新聞已更新");
 				resolve(data)
-			})
-			.catch((error) => {
-				log.warn("無法獲取新聞：" + error)
-			})
+            })
+            .catch((error) => {
+                log.warn("無法獲取新聞：" + error)
+            })
 	})
 }
 

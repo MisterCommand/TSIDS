@@ -5,7 +5,7 @@ var config = {
         weather: false, // HKO and CCWeather
         marquee: true,
 		control: true,
-		news: false
+		news: true
     },
     intervals: {
         event: 1800000,
