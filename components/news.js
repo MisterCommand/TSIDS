@@ -11,7 +11,7 @@ var get = function() {
             } else {
             let content = JSON.parse(body);
             let output = content.items.map((item) => {
-                return item.title.replace("[現場]", "") // Extract news titles
+                return "📰 " + item.title.replace("[現場]", "") // Extract news titles
             }); // Extract news title
             output = output.filter((item) => {
                 return !item.includes("《") && !item.includes("[不斷更新]") // Remove some titles
