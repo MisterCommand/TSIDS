@@ -19,7 +19,7 @@
 TSIDS (Teacher and Student Information Display System) is a fully automatic classroom information display software. It currently contains a NodeJS backend script, a web page for display and control. It is currently deployed in a Docker container.
 
 ## Features
-[Screenshots (WIP)](http://wip.com "Screenshots (WIP)")
+#### [Screenshots (WIP)](http://wip.com "Screenshots (WIP)")
 - Display current time
 - Display current weather (temperature, rain, weather warnings, weather reminders)
 - Display today and future homework
