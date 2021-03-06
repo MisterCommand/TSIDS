@@ -1,8 +1,9 @@
 var config = {
     components: {
         event: true,
-        homework: false,
-        weather: false, // HKO and CCWeather
+        homework: true,
+        hko: true,
+        ccweather: false,
         marquee: true,
 		control: true,
 		news: true
