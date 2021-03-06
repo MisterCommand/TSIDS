@@ -67,7 +67,7 @@ http.listen(3000, () => {
 var update = false;
 var update_event;
 var update_homework;
-var update_weather;
+var update_hko;
 var update_marquee;
 
 // START - Set update intervals
@@ -85,10 +85,10 @@ function start() {
                 eclass();
             }, config.intervals.homework)
         }
-        if (config.components.weather) {
+        if (config.components.hko) {
             fetchTemp();
             fetchWarning();
-            update_weather = setInterval(() => {
+            update_hko = setInterval(() => {
                 fetchTemp();
                 fetchWarning();
             }, config.intervals.weather)
@@ -111,7 +111,7 @@ function stop() {
         update = false;
         clearInterval(update_event);
         clearInterval(update_homework);
-        clearInterval(update_weather);
+        clearInterval(update_hko);
         clearInterval(update_marquee);
     }
 }
@@ -186,7 +186,9 @@ function fetchWarning() {
 var last_update = "";
 
 function eclass() {
-    homework.update()
+    // Only Update (Connect To Scraper) If URL_ECLASS Is Set
+    if (process.env.URL_ECLASS) {
+        homework.update()
         .then(() => {
             log.info("數據庫已更新");
             last_update = new Date;
@@ -201,6 +203,10 @@ function eclass() {
         .catch((error) => {
             log.warn("無法連接更新服務" + error)
         })
+    } else {
+        todayHW();
+        futureHW();
+    }
 };
 
 // Fetch today homework
@@ -259,7 +265,7 @@ function fetchNews() {
     return new Promise((resolve) => {
         news.get()
             .then((data) => {
-                log.warn("新聞已更新");
+                log.info("新聞已更新");
 				resolve(data)
             })
             .catch((error) => {
@@ -339,14 +345,14 @@ async function marqueeUpdate() {
 		data[data.indexOf("%version%")] = "TSIDS V" + version
 	}
 	if (data.includes("%rain%")) {
-		if (config.components.weather) { // If enabled
+		if (config.components.ccweather) { // If enabled
 			data[data.indexOf("%rain%")] = await CCWeather()
 		} else {
 			data.splice(data.indexOf("%rain%"), 1) // Remove this element
 		}
 	}
 	if (data.includes("%swr%")) {
-		if (config.components.weather) {
+		if (config.components.hko) {
 			data[data.indexOf("%swr%")] = await fetchSpecialWeatherReminder();
 		} else {
 			data.splice(data.indexOf("%swr%"), 1)
