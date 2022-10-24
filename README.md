@@ -6,7 +6,6 @@
   <p align="center">
     Frontend: HTML + JS   Backend: NodeJS
     <br />
-    <a href="http://6p4ever.website:3001"><strong>Visit Now »</strong></a>
     <br />
     <br />
     <a href="https://github.com/MisterCommand/TSIDS/releases">Releases</a>
@@ -19,7 +18,7 @@
 TSIDS (Teacher and Student Information Display System) is a fully automatic classroom information display software. It currently contains a NodeJS backend script, a web page for display and control. It is currently deployed in a Docker container.
 
 ## Features
-#### [Screenshots (WIP)](http://wip.com "Screenshots (WIP)")
+#### [Screenshots (WIP)](https://github.com/MisterCommand/TSIDS/wiki/Screenshots "Screenshots")
 - Display current time
 - Display current weather (temperature, rain, weather warnings, weather reminders)
 - Display today and future homework
@@ -41,7 +40,4 @@ Run the following commands in project directory
 4. Enter information about your database to establish connection and create table
 5. `npm start` to start TSIDS
 6. Visit `[YOUR IP]:3000/index.htm`
-
-## Next
-#### [Configuration (WIP)](http://wip.com "Configuration (WIP)")
 
